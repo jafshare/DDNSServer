@@ -49,5 +49,5 @@
 
 ## 3、更改路由器映射
 
-需要手动更改路由器的映射规则,查看https://jingyan.baidu.com/article/647f0115fc82447f2148a8ed.html。
+需要手动更改路由器的映射规则,查看https://jingyan.baidu.com/article/647f0115fc82447f2148a8ed.html
 
