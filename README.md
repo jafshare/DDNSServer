@@ -31,7 +31,7 @@
   | :-----------: | :-----------------------------: | :--: |
   |   -h,--help   |          调出帮助文档           |  是  |
   |    -i,--id    |        指定AccessKey ID         |  是  |
-  |  -s,--secret  |        指定AccessKey ID         |  是  |
+  |  -s,--secret  |        指定AccessKey Secret         |  是  |
   |  -d,--domain  | 指定需要绑定的域名(不用包含www) |  是  |
   | -t,--interval |   指定DNS更新时间(默认10分钟)   |  是  |
 
@@ -39,7 +39,7 @@
 
   ```yaml
   id: 你的AccessKey ID
-  secret: 你的AccessKey S
+  secret: 你的AccessKey Secret
   domain: 你的域名(不用包含www)
   interval: 10
   # 由于interval已经有默认值，可以不用指定
