@@ -1,48 +1,53 @@
-# 通过阿里云DDNS实现外网访问内网
+# 使用Python3 + 阿里云DNS解析实现DDNS
 
-最近本人需要使用远程桌面连接家里的电脑，正好家里的光宽是有公网ip的，而且手头有一个多余的阿里云域名，所以正好可以通过DDNS来实现远程访问。
+## 1、准备
 
-## 1、DDNS简介
+- 公网ip
+- 阿里云域名
+- python3环境
 
-**DDNS(Dynamic Domain Name Server)**是动态域名服务的缩写,它是将用户的动态ip映射到一个固定的域名解析服务器上。通俗来讲就是可以通过一个固定的域名来访问一台ip随时变化的主机。
+## 2、执行
 
-至于ip为什么会发生变化，就要从IPv4讲起了，起初，每个互联网用户都是可以分配到一个公网的ip(公网ip意味着其他用户可以直接通过该ip直接访问)，但是由于互联网的发展，用户的急剧增加，公网ip随着分配变得越来越少，直至耗尽。
+- 下载依赖包(**requirements.txt中的是环境Python3.6.5,其他版本需自己下载依赖库**)
 
-所以到了现在，家庭用户拥有公网ip的变得越来越少了，运营商通过NAT技术将用户变成了内网ip(其他用户无法直接通过内网ip直接访问)。但是公网ip是有限的，不可能固定分配一个公网ip给用户，所以公网地址也是随机分配的，这对于需要使用固定ip远程连接或者访问服务器的用户来说影响极大，解决这个问题就需要使用DDNS将动态的ip绑定到固定的域名上。**这样不仅解决的ip的随机改变，同时域名比起ip来更容易记忆。**
+  ```
+  pip install aliyun-python-sdk-core-v3
+  pip install aliyun-python-sdk-alidns
+  pip install chardet
+  pip install pyyaml
+  ```
 
-**小知识**: IPv4预留了3个内网网段
+  
 
-- A类 10.0.0.0-10.255.255.255
-- B类 172.16.0.0-172.31.255.255
-- C类 192.168.0.0-192.168.255.255
+- 终端执行
 
-## 2、准备
-
-1. 一个公网的ip,
-2. 一个域名(阿里云或者其他域名提供商都可以购买)
-
-## 3、外网访问内网流程
-
-- 利用阿里云的DNS解析服务，这是大概的流程:
-
-  ![1553945131077](.\images\1553945131077.png)
-
-#### 4、阿里云的`Python SDK`
-
-- 通过阿里云的给的API接口直接操作阿里云的服务，详情查看https://help.aliyun.com/product/108102.html
-
-- 本人使用Python3，所以首先安装`SDK`核心库
+  进入主目录
 
   ```bash
-  pip install aliyun-python-sdk-core-v3
+  python server.py [options] 
   ```
 
-  然后是dns解析库
+  |   可选参数    |              功能               | 可选 |
+  | :-----------: | :-----------------------------: | :--: |
+  |   -h,--help   |          调出帮助文档           |  是  |
+  |    -i,--id    |        指定AccessKey ID         |  是  |
+  |  -s,--secret  |        指定AccessKey ID         |  是  |
+  |  -d,--domain  | 指定需要绑定的域名(不用包含www) |  是  |
+  | -t,--interval |   指定DNS更新时间(默认10分钟)   |  是  |
 
+  **注意:** 当`id`,`sercret`,`domain`在命令行未指定时,必须手动创建`config.yaml`文件(主目录下),主要内容如下:
+
+  ```yaml
+  id: 你的AccessKey ID
+  secret: 你的AccessKey S
+  domain: 你的域名(不用包含www)
+  interval: 10
+  # 由于interval已经有默认值，可以不用指定
   ```
-  aliyun-python-sdk-alidns
-  ```
 
-- 如何获取AccessKey可以看https://help.aliyun.com/document_detail/66453.html?spm=a2c4g.11186623.2.12.7f464389tNFlYf
+  **命令行给定的参数优先级大于`config.yaml`中的参数**
 
-5、
+## 3、更改路由器映射
+
+需要手动更改路由器的映射规则,查看https://jingyan.baidu.com/article/647f0115fc82447f2148a8ed.html。
+
