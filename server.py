@@ -1,3 +1,4 @@
+import os
 import time
 import json
 
@@ -98,10 +99,16 @@ class DDNS(object):
         """
         new_ip = get_ip()
         if new_ip:
-            with open('ip_cache.txt', 'r+') as f:
+            if not os.path.exists('ip.cache'):
+                with open('ip.cache', 'w'):
+                    pass
+            with open('ip.cache', 'r+') as f:
                 old_ip = f.read()
+                f.seek(0)
                 # 比较当前IP是否和上一次的IP是否相同，如果相同,则不写入缓存文件，同时也不进行DNS更新
                 if old_ip != new_ip:
+                    # 清空文件
+                    f.truncate()
                     f.write(new_ip)
                     self.is_update = True
                 else:
@@ -115,9 +122,7 @@ def run():
     if (not config.get('id')) or (not config.get('secret')) or (not config.get('domain')):
         try:
             temp = load_config('config.yaml')
-            for k, v in temp.items():
-                if config.get(k) is None:
-                    config[k] = v
+            config.update(temp)
         except FileNotFoundError as e:
             logger.error('配置文件不存在！')
             raise e
